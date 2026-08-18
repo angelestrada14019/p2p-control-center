@@ -34,7 +34,7 @@ export function NavegacionModulos() {
   return (
     <nav
       aria-label="Navegación de módulos"
-      className={`flex shrink-0 flex-col border-r border-border bg-surface ${expandida ? 'w-56' : 'w-14'}`}
+      className={`flex shrink-0 flex-col overflow-y-auto border-r border-border bg-surface ${expandida ? 'w-56' : 'w-14'}`}
     >
       <div
         className={`flex h-10 shrink-0 items-center border-b border-border px-2 ${expandida ? 'justify-between' : 'justify-center'}`}
