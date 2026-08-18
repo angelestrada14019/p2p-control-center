@@ -1,0 +1,185 @@
+/**
+ * Tokens del sistema de diseño — P2P Control Center
+ *
+ * FUENTE DE VERDAD: .claude/docs/03-diseno.md
+ * Este archivo es la ÚNICA definición de color, tipografía, espaciado, radio y
+ * sombra del proyecto. Ningún componente define valores propios.
+ *
+ * Todos los ratios de contraste anotados aquí están CALCULADOS con la fórmula
+ * WCAG 2.x de luminancia relativa, no citados de memoria. El test
+ * `src/styles/tokens.test.ts` los vuelve a calcular y falla si alguno cae por
+ * debajo de su mínimo — para que un cambio de color no rompa la accesibilidad
+ * en silencio.
+ *
+ * Nombres de token: dentro de `@theme`, Tailwind v4 genera utilidades a partir
+ * del sufijo (p. ej. `--color-primary` → `bg-primary`/`text-primary`). Los
+ * colores de texto usan el sufijo "ink" (no "text") para que la utilidad
+ * resultante sea `text-ink`, no el redundante `text-text`.
+ */
+
+@theme {
+  /* ─────────────────────────────────────────────────────────────
+     SUPERFICIES  ·  distribución 60-30-10, el 60% vive aquí
+     ───────────────────────────────────────────────────────────── */
+  --color-canvas: #f8f9fa; /* Fondo global. Off-white: sin deslumbramiento */
+  --color-surface: #ffffff; /* Tarjetas, filas, paneles, inputs */
+  --color-surface-sunken: #f1f5f9; /* Encabezado de tabla, zonas de filtro */
+
+  /* Bordes. IMPORTANTE: --color-border es DECORATIVO (1.23:1 sobre blanco).
+     La estructura de la tabla se comunica por alineación y espaciado, no por
+     la línea. Cualquier borde que comunique estado (foco, error, selección)
+     DEBE usar --color-border-strong o un color semántico. */
+  --color-border: #e2e8f0; /* 1.23:1 — solo gridlines y divisores */
+  --color-border-strong: #64748b; /* 4.76:1 ✅ — inputs, selección, significado */
+
+  /* ─────────────────────────────────────────────────────────────
+     TEXTO ("ink")  ·  el 30% de la distribución
+     ───────────────────────────────────────────────────────────── */
+  --color-ink: #0f172a; /* 17.85:1 sobre blanco · 16.94:1 sobre canvas ✅ */
+  --color-ink-secondary: #475569; /* 7.58 / 7.19 / 6.92:1 ✅ — etiquetas, encabezados */
+
+  /* El "Gris Slate" #64748B da 4.34:1 sobre la superficie hundida (encabezado
+     de tabla, zona de filtros) y falla AA justo donde más metadatos aparecen.
+     Se oscurece lo mínimo para cumplir en las TRES superficies (5.43 / 5.15 /
+     4.95:1 ✅) conservando su carácter. #64748B sigue vigente para bordes,
+     donde el mínimo es 3:1 y sí cumple. */
+  --color-ink-muted: #5f6b7a;
+  --color-ink-disabled: #94a3b8; /* 2.56:1 sobre blanco — exento (WCAG SC 1.4.3), SOLO controles inertes.
+                                     NUNCA para comunicar información: un dato
+                                     "no disponible" va en --color-ink-muted. */
+  --color-ink-inverse: #ffffff;
+
+  /* ─────────────────────────────────────────────────────────────
+     ACCIÓN PRIMARIA  ·  el 10% de acento. DNA de marca Rappi
+     ───────────────────────────────────────────────────────────── */
+
+  /* El naranja de marca se conserva EXACTO. El label va en slate, no en blanco:
+       blanco sobre #FF441F = 3.44:1 ❌ (falla AA para texto normal)
+       slate  sobre #FF441F = 5.18:1 ✅
+     Texto oscuro sobre naranja preserva el hex de marca sin alterarlo, que no
+     es decisión nuestra. Ver ADR-11. */
+  --color-primary: #ff441f;
+  --color-primary-hover: #f03a15; /* slate encima: 4.52:1 ✅ */
+  --color-primary-ink: #0f172a; /* 5.18:1 sobre primary ✅ */
+  --color-primary-subtle: #fff1ed; /* Fondo de fila seleccionada / tab activo */
+
+  /* A partir de #E63512 el texto slate ya falla (4.15:1), así que el estado
+     `pressed` se resuelve con sombra interior, no oscureciendo más el relleno. */
+
+  /* ─────────────────────────────────────────────────────────────
+     ESTADOS SEMÁNTICOS  ·  el sistema de semáforos
+     ─────────────────────────────────────────────────────────────
+
+     REGLA DURA (ADR-06): ningún estado se comunica SOLO con color.
+     Cada indicador lleva siempre ícono con forma distinta o etiqueta de texto.
+     Los cuatro estados tienen luminancias casi idénticas (~1.02:1 entre sí):
+     con daltonismo o impresos en escala de grises son indistinguibles.
+
+     REGLA DE TRATAMIENTO (ADR-11): como el naranja de acción y el rojo de
+     estado tienen 1.09:1 entre sí, la distinción NO es cromática:
+         Acción = relleno sólido naranja con texto slate
+         Estado = badge pastel con texto oscuro e ícono
+     Dos lenguajes visuales distintos que no se confunden. */
+
+  /* Éxito — "flujo positivo". El verde menta de marca (#10B981) NO es legible
+     como texto (2.54:1 sobre blanco, 2.23:1 sobre su propio badge), así que
+     queda como relleno decorativo y el texto usa variantes oscuras. */
+  --color-success: #10b981; /* SOLO relleno: barras de progreso, series de gráfico */
+  --color-success-solid: #0b8457; /* 4.72:1 ✅ — punto de estado */
+  --color-success-subtle: #e6f4ea; /* Fondo de badge */
+  --color-success-ink: #047857; /* 4.83:1 sobre su badge ✅ */
+
+  /* Advertencia */
+  --color-warning-solid: #d97706; /* 3.19:1 ✅ — punto de estado */
+  --color-warning-subtle: #fef3c7;
+  --color-warning-ink: #92400e; /* 6.37:1 sobre su badge ✅ */
+
+  /* Error / crítico */
+  --color-danger-solid: #dc2626; /* 4.83:1 ✅ */
+  --color-danger-subtle: #fee2e2;
+  --color-danger-ink: #b91c1c; /* 5.30:1 sobre su badge ✅ */
+
+  /* Información */
+  --color-info-solid: #2563eb; /* 5.17:1 ✅ */
+  --color-info-subtle: #dbeafe;
+  --color-info-ink: #1d4ed8; /* 5.49:1 sobre su badge ✅ */
+
+  /* Neutro — "sin información" o "no aplica". OJO: gris NO significa cero.
+     Un KPI en cero se muestra en el color que le corresponda según su meta. */
+  --color-neutral-solid: #64748b; /* 4.76:1 ✅ */
+  --color-neutral-subtle: #f1f5f9;
+  --color-neutral-ink: #475569; /* 6.92:1 sobre su badge ✅ */
+
+  /* Foco — con el color de marca. 3.44:1 ✅ (mínimo 3:1 para no textual) */
+  --color-focus: #ff441f;
+
+  /* ─────────────────────────────────────────────────────────────
+     TIPOGRAFÍA
+     ─────────────────────────────────────────────────────────────
+     Inter servida localmente (@fontsource-variable/inter): es una herramienta
+     interna, no conviene una dependencia de red externa en cada carga (ADR-13).
+     Soporta numerales tabulares y cero cortado, imprescindibles al alinear
+     miles de cifras monetarias en columna. */
+  --font-sans:
+    'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Escala comprimida a propósito: en una herramienta densa, los saltos
+     tipográficos grandes desperdician espacio vertical valioso.
+     Mínimo absoluto 12px — no bajar de ahí ni para caber más columnas. */
+  --text-display: 1.75rem; /* 28px */
+  --text-display--line-height: 2.25rem;
+  --text-h1: 1.375rem; /* 22px */
+  --text-h1--line-height: 1.875rem;
+  --text-h2: 1.125rem; /* 18px */
+  --text-h2--line-height: 1.625rem;
+  --text-h3: 0.9375rem; /* 15px */
+  --text-h3--line-height: 1.375rem;
+  --text-body: 0.875rem; /* 14px — texto base */
+  --text-body--line-height: 1.25rem;
+  --text-table: 0.8125rem; /* 13px — celda de tabla densa */
+  --text-table--line-height: 1.125rem;
+  --text-th: 0.75rem; /* 12px — encabezado de columna */
+  --text-th--line-height: 1rem;
+  --text-caption: 0.75rem; /* 12px — metadatos, ayuda */
+  --text-caption--line-height: 1rem;
+  --text-kpi: 2rem; /* 32px — cifra grande, siempre con tabular-nums */
+  --text-kpi--line-height: 2.375rem;
+
+  /* ─────────────────────────────────────────────────────────────
+     ESPACIADO  ·  base 4px
+     ─────────────────────────────────────────────────────────────
+     Un único multiplicador: es el mecanismo de Tailwind v4 para toda la
+     escala numérica (p-1, gap-4, etc.). 0.25rem = 4px ya es la base pedida. */
+  --spacing: 0.25rem;
+
+  /* ─────────────────────────────────────────────────────────────
+     RADIOS  ·  bordes suaves, tope duro de 12px (regla anti-slop, ver
+     03-diseno.md §11: "esquinas muy redondeadas (>12px) en contenedores").
+     --radius-modal se capó a 12px por esto — 16px superaba el límite.
+     ───────────────────────────────────────────────────────────── */
+  --radius-badge: 0.375rem; /* 6px  — badges y chips: densos, radio contenido */
+  --radius-control: 0.625rem; /* 10px — botones, inputs, selects */
+  --radius-card: 0.75rem; /* 12px — tarjetas, paneles, contenedor de tabla */
+  --radius-modal: 0.75rem; /* 12px — modales y diálogos. Tope del anti-slop */
+  --radius-full: 9999px; /* Puntos de semáforo, avatares */
+
+  /* ─────────────────────────────────────────────────────────────
+     ELEVACIÓN  ·  sombras ligeras
+     ─────────────────────────────────────────────────────────────
+     La jerarquía se comunica sobre todo con el contraste de superficie entre
+     #FFFFFF y #F8F9FA. El exceso de sombra ensucia una pantalla llena de tablas. */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-raised: 0 6px 16px -2px rgba(15, 23, 42, 0.08);
+  --shadow-overlay: 0 12px 28px -6px rgba(15, 23, 42, 0.14);
+
+  /* ─────────────────────────────────────────────────────────────
+     MOVIMIENTO  ·  orienta, no decora. Nada supera 300ms
+     ───────────────────────────────────────────────────────────── */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Fuera de @theme: no corresponde a ningún namespace de utilidades de
+   Tailwind, se consume vía arbitrary value `shadow-[var(--inset-pressed)]`. */
+:root {
+  --inset-pressed: inset 0 2px 6px rgba(15, 23, 42, 0.22);
+}

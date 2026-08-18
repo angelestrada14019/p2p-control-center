@@ -1,0 +1,85 @@
+# ─────────────────────────────────────────────────────────────
+# Secretos y configuración local — NUNCA versionar
+# ─────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# Configuración local de Claude Code (permisos de la máquina)
+.claude/settings.local.json
+
+# Symlinks de skills: apuntan a rutas ABSOLUTAS de la máquina local y se
+# romperían en cualquier otro equipo. El contenido real sí se versiona en
+# .agents/skills/; para regenerar los enlaces: npx skills experimental_install
+.claude/skills/
+
+# Credenciales de cualquier tipo
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+.npmrc
+.snowflake/
+*.local.json
+*.local.js
+*.local.ts
+
+# ─────────────────────────────────────────────────────────────
+# Dependencias y build
+# ─────────────────────────────────────────────────────────────
+node_modules/
+dist/
+dist-ssr/
+build/
+.vite/
+*.tsbuildinfo
+
+# ─────────────────────────────────────────────────────────────
+# Caché y herramientas
+# ─────────────────────────────────────────────────────────────
+.cache/
+.temp/
+.tmp/
+coverage/
+.eslintcache
+.turbo/
+.vercel/
+.netlify/
+
+# ─────────────────────────────────────────────────────────────
+# Logs
+# ─────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─────────────────────────────────────────────────────────────
+# Sistema operativo
+# ─────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─────────────────────────────────────────────────────────────
+# Editores
+# ─────────────────────────────────────────────────────────────
+.idea/
+*.swp
+*.swo
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.shared.json
+
+# ─────────────────────────────────────────────────────────────
+# Notas
+# ─────────────────────────────────────────────────────────────
+# SÍ se versionan, a propósito:
+#   CLAUDE.md, .claude/docs/, .claude/agents/  → documentación y agentes del equipo
+#   .agents/skills/, skills-lock.json          → mismas skills para todos, sin depender de la red
+#   .mcp.json                                  → solo URL y project_ref público, sin credenciales
+#
+# NO se versiona .claude/skills/ porque son symlinks absolutos de cada máquina.

@@ -1,0 +1,75 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import './tokens.css';
+
+/**
+ * Estilos base — P2P Control Center
+ * Ver .claude/docs/03-diseno.md
+ */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Cero cortado en toda la interfaz: reduce la confusión 0/O en códigos
+     contables y de proveedor. Ver 03-diseno.md §3.1 */
+  body {
+    font-variant-numeric: slashed-zero;
+  }
+
+  /* Foco visible SIEMPRE. Nunca `outline: none` sin sustituto: en una
+     herramienta de revisión intensiva el teclado es un flujo principal. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-badge);
+  }
+
+  /* El navegador ya no pinta su propio anillo cuando el foco llega con ratón,
+     pero mantenemos el de teclado intacto. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-subtle);
+    color: var(--color-ink);
+  }
+
+  /* Respeto de la preferencia del sistema: las transiciones se reducen a
+     cambios instantáneos, no se eliminan los cambios de estado. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* SOLO para cifras dentro de una columna de tabla (celdas de Tabla.tsx):
+     ancho de dígito fijo y alineación a la derecha, para que los números no
+     "bailen" verticalmente y el ojo pueda comparar magnitudes de un vistazo.
+     Para una cifra aislada (tarjeta de KPI, stat de resumen) usa el utility
+     nativo de Tailwind `tabular-nums` SIN esta clase — forzar la alineación
+     derecha ahí rompe el layout en vez de ayudarlo. */
+  .cifra {
+    font-variant-numeric: tabular-nums slashed-zero;
+    text-align: right;
+  }
+}
