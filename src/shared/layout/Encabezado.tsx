@@ -20,6 +20,10 @@ const ETIQUETA_ENTORNO: Record<string, string> = {
   prod: 'Producción',
 }
 
+function Separador() {
+  return <div className="h-5 w-px bg-border-strong" aria-hidden="true" />
+}
+
 export function Encabezado() {
   const { data: resumen } = useResumenEjecutivo()
   const { data: noLeidas = 0 } = useAlertasNoLeidas()
@@ -39,20 +43,34 @@ export function Encabezado() {
         {resumen && <Semaforo tono={resumen.estadoGeneral.tono} etiqueta={resumen.estadoGeneral.etiqueta} />}
       </div>
 
-      <div className="flex flex-wrap items-center gap-4">
-        <SelectorAmbito />
+      <div className="flex flex-wrap items-center gap-3">
+        {/* Periodo: primer contexto global, más relevante para el seguimiento diario */}
         <SelectorPeriodo />
 
-        {entorno && entorno !== 'prod' && (
-          <Badge className="bg-neutral-subtle text-neutral-ink">{ETIQUETA_ENTORNO[entorno] ?? entorno}</Badge>
-        )}
-        {USANDO_DATOS_SIMULADOS && <Badge className="bg-warning-subtle text-warning-ink">Datos simulados</Badge>}
+        <Separador />
+
+        <SelectorAmbito />
+
+        {(entorno && entorno !== 'prod') || USANDO_DATOS_SIMULADOS ? (
+          <div className="flex items-center gap-2">
+            {entorno && entorno !== 'prod' && (
+              <Badge className="bg-neutral-subtle text-neutral-ink">
+                {ETIQUETA_ENTORNO[entorno] ?? entorno}
+              </Badge>
+            )}
+            {USANDO_DATOS_SIMULADOS && (
+              <Badge className="bg-warning-subtle text-warning-ink">Datos simulados</Badge>
+            )}
+          </div>
+        ) : null}
 
         {resumen && (
           <span className="text-caption text-ink-muted">
             Actualizado {formatearRelativo(resumen.ultimaActualizacion)}
           </span>
         )}
+
+        <Separador />
 
         <Link
           to="/alertas"

@@ -34,8 +34,30 @@ export function NavegacionModulos() {
   return (
     <nav
       aria-label="Navegación de módulos"
-      className={`shrink-0 border-r border-border bg-surface ${expandida ? 'w-56' : 'w-14'}`}
+      className={`flex shrink-0 flex-col overflow-y-auto border-r border-border bg-surface ${expandida ? 'w-56' : 'w-14'}`}
     >
+      <div
+        className={`flex h-10 shrink-0 items-center border-b border-border px-2 ${expandida ? 'justify-between' : 'justify-center'}`}
+      >
+        {expandida && (
+          <span className="text-caption font-medium uppercase tracking-wider text-ink-muted">
+            Menú
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={() => setForzada(!expandida)}
+          aria-label={expandida ? 'Colapsar navegación' : 'Expandir navegación'}
+          className="flex items-center gap-1 rounded-control p-1.5 text-caption text-ink-muted hover:bg-surface-sunken"
+        >
+          {expandida ? (
+            <ChevronLeft className="size-4 shrink-0" aria-hidden="true" />
+          ) : (
+            <ChevronRight className="size-4 shrink-0" aria-hidden="true" />
+          )}
+        </button>
+      </div>
+
       <ul className="flex flex-col gap-1 p-2">
         {ENLACES.map(({ a, etiqueta, icono: Icono, fin }) => (
           <li key={a}>
@@ -56,22 +78,6 @@ export function NavegacionModulos() {
           </li>
         ))}
       </ul>
-
-      <button
-        type="button"
-        onClick={() => setForzada(!expandida)}
-        aria-label={expandida ? 'Colapsar navegación' : 'Expandir navegación'}
-        className="mx-2 mt-2 flex items-center gap-2 rounded-control p-2 text-caption text-ink-muted hover:bg-surface-sunken"
-      >
-        {expandida ? (
-          <>
-            <ChevronLeft className="size-4 shrink-0" aria-hidden="true" />
-            Colapsar
-          </>
-        ) : (
-          <ChevronRight className="size-4 shrink-0" aria-hidden="true" />
-        )}
-      </button>
     </nav>
   )
 }
